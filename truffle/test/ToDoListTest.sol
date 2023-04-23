@@ -19,19 +19,23 @@ contract TestToDoList {
     }
 
     function testCreateTask() public {
-        address contractAddress = address(toDoList);
-        address ownerAddress = contractAddress.owner();
-        toDoList.createTask("Test Task", 0, {from: ownerAddress});
-        uint count = toDoList.getTasksCount();
-        Assert.equal(count, 1, "Task count should be 1 after creating a new task.");
-        string memory taskDescription = toDoList.getTasksList()[0].description;
-        Assert.equal(taskDescription, "Test Task", "Description of newly created task should be 'Test Task'.");
+        toDoList.createTask("Test Task");
+        uint count = toDoList.getTasksListLength();
+        Assert.equal(
+            count,
+            1,
+            "Task count should be 1 after creating a new task."
+        );
+        taskDescription = toDoList.getTasksList()[0].description;
+        Assert.equal(
+            taskDescription,
+            "Test Task",
+            "Description of newly created task should be 'Test Task'."
+        );
     }
 
     function testCompleteTask() public {
-        address contractAddress = address(toDoList);
-        address ownerAddress = contractAddress.owner();
-        toDoList.completeTask(0, {from: ownerAddress});
+        toDoList.completeTask(0);
         Assert.isTrue(
             toDoList.getTasksList()[0].done,
             "Newly created task should not be marked as done."
