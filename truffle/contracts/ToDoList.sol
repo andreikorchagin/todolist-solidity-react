@@ -13,14 +13,10 @@ contract ToDoList {
     constructor(string memory _title) {
         title = _title;
         owner = msg.sender;
-        tasksList = new Task[];
     }
 
     function createTask(string memory _description) public onlyOwner {
-        Task memory newTask = Task({
-            done: false,
-            description: _description
-        });
+        Task memory newTask = Task({done: false, description: _description});
         tasksList.push(newTask);
     }
 
@@ -29,8 +25,19 @@ contract ToDoList {
         tasksList[taskIndex].done = true;
     }
 
+    function getTasksListLength() public view returns (uint) {
+        return tasksList.length;
+    }
+
+    function getTasksList() public view returns (Task[] memory) {
+        return tasksList;
+    }
+
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only the contract owner can call this function.");
+        require(
+            msg.sender == owner,
+            "Only the contract owner can call this function."
+        );
         _;
     }
 }
