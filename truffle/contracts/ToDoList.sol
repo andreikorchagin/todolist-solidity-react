@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.0;
 
 contract ToDoList {
+    enum Filter {
+        All,
+        Complete,
+        Incomplete
+    }
     string public title;
     address public owner;
     struct Task {
@@ -10,8 +15,26 @@ contract ToDoList {
     }
     Task[] public tasksList;
 
-    constructor(string memory listTitle) {
-        title = listTitle;
+    constructor(string memory _title) {
+        title = _title;
         owner = msg.sender;
+    }
+
+    function createTask(string memory _description) public onlyOwner {
+        Task memory newTask = Task({
+            done: false,
+            description: _description
+        });
+        tasksList.push(newTask);
+    }
+
+    function completeTask(uint taskIndex) public onlyOwner {
+        require(taskIndex < tasksList.length, "Task index out of bounds");
+        tasksList[taskIndex].done = true;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the contract owner can call this function.");
+        _;
     }
 }
