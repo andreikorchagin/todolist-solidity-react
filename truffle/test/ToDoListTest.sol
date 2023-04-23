@@ -1,20 +1,49 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.0;
 
-import "../contracts/ToDoList.sol";
-// These files are dynamically created at test time
 import "truffle/Assert.sol";
-import "truffle/DeployedAddresses.sol";
+import "../contracts/ToDoList.sol";
 
-contract ToDoListTest {
+contract TestToDoList {
+    function testCreateTask() public {
+        ToDoList toDoList = new ToDoList("My To-Do List");
 
-  function testWriteValue() public {
-    SimpleStorage simpleStorage = SimpleStorage(DeployedAddresses.SimpleStorage());
+        string memory expectedTaskDescription = "My Task";
+        uint expectedTaskCount = 1;
 
-    Assert.equal(simpleStorage.read(), 0, "Contract should have 0 stored");
-    simpleStorage.write(1);
-    Assert.equal(simpleStorage.read(), 1, "Contract should have 1 stored");
-    simpleStorage.write(2);
-    Assert.equal(simpleStorage.read(), 2, "Contract should have 2 stored");
-  }
+        toDoList.createTask(expectedTaskDescription);
+
+        uint actualTaskCount = toDoList.tasksList.length;
+        string memory actualTaskDescription = toDoList.tasksList[0].description;
+
+        Assert.equal(
+            actualTaskCount,
+            expectedTaskCount,
+            "Task count should increment by 1"
+        );
+        Assert.equal(
+            actualTaskDescription,
+            expectedTaskDescription,
+            "Task description should be equal to the expected value"
+        );
+    }
+
+    function testCompleteTask() public {
+        ToDoList toDoList = new ToDoList("My To-Do List");
+
+        toDoList.createTask("My Task");
+
+        uint expectedTaskIndex = 0;
+        bool expectedTaskStatus = true;
+
+        toDoList.completeTask(expectedTaskIndex);
+
+        bool actualTaskStatus = toDoList.tasksList[expectedTaskIndex].done;
+
+        Assert.equal(
+            actualTaskStatus,
+            expectedTaskStatus,
+            "Task status should be true after completion"
+        );
+    }
 }

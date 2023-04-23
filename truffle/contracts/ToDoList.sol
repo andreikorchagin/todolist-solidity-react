@@ -2,11 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract ToDoList {
-    enum Filter {
-        All,
-        Complete,
-        Incomplete
-    }
     string public title;
     address public owner;
     struct Task {
@@ -18,6 +13,7 @@ contract ToDoList {
     constructor(string memory _title) {
         title = _title;
         owner = msg.sender;
+        tasksList = new Task[](0);
     }
 
     function createTask(string memory _description) public onlyOwner {
