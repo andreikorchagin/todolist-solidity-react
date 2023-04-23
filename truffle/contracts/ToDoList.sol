@@ -13,7 +13,7 @@ contract ToDoList {
     constructor(string memory _title) {
         title = _title;
         owner = msg.sender;
-        tasksList = new Task[](0);
+        tasksList = new Task[];
     }
 
     function createTask(string memory _description) public onlyOwner {
